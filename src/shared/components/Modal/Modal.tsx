@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId } from "react";
 import Button from "../Button/Button";
 import * as S from "./Modal.styled";
 
@@ -16,23 +16,37 @@ interface ModalProps {
 
 const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
   const buttonId = useId();
+  const titleId = `${buttonId}-title`;
+  const contentId = `${buttonId}-desc`;
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
 
   return (
     <S.Overlay onClick={onClose}>
-      <S.Container onClick={(e) => e.stopPropagation()}>
-        <h2>{title}</h2>
-        <div>{content}</div>
+      <S.Container
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={contentId}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id={titleId}>{title}</h2>
+        <div id={contentId}>{content}</div>
 
         <div>
-          {buttons.map((button) => {
-            return (
-              <Button
-                key={buttonId}
-                onClick={button.onClick}
-                label={button.label}
-              />
-            );
-          })}
+          {buttons.map((button) => (
+            <Button
+              key={buttonId}
+              onClick={button.onClick}
+              label={button.label}
+            />
+          ))}
         </div>
       </S.Container>
     </S.Overlay>
