@@ -16,4 +16,10 @@ export const Container = styled.div`
   border-radius: 8px;
   min-width: 31.25rem;
   max-width: 50rem;
+  max-height: 80vh;
+  overflow-y: auto;
+`;
+
+export const Content = styled.div`
+  padding: 1rem 0;
 `;
