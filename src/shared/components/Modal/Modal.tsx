@@ -25,6 +25,13 @@ const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
   useFocusTrap(true, containerRef, titleRef);
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -45,7 +52,7 @@ const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
         <h2 id={titleId} ref={titleRef} tabIndex={-1}>
           {title}
         </h2>
-        <div id={contentId}>{content}</div>
+        <S.Content id={contentId}>{content}</S.Content>
 
         <div>
           {buttons.map((button) => (
