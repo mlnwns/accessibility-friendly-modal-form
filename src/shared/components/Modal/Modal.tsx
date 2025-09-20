@@ -1,4 +1,4 @@
-import { useEffect, useRef, useId } from "react";
+import { useEffect, useRef, useId, type RefObject } from "react";
 import Button from "../Button/Button";
 import * as S from "./Modal.styled";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
@@ -13,16 +13,23 @@ interface ModalProps {
   title: string;
   content: React.ReactNode;
   buttons?: ModalButton[];
+  returnFocusRef?: RefObject<HTMLElement | null>;
 }
 
-const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
+const Modal = ({
+  onClose,
+  title,
+  content,
+  buttons = [],
+  returnFocusRef,
+}: ModalProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const buttonId = useId();
   const titleId = `${buttonId}-title`;
   const contentId = `${buttonId}-desc`;
 
-  useFocusTrap(true, containerRef, titleRef);
+  useFocusTrap(true, containerRef, titleRef, returnFocusRef);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";

@@ -2,10 +2,11 @@ import Button from "../../shared/components/Button/Button";
 import Select from "../../shared/components/Select/Select";
 import Modal from "../../shared/components/Modal/Modal";
 import Input from "../../shared/components/Input/Input";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const ModalFormPage = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const ModalFormPage = () => {
   return (
     <>
       <Button
+        ref={triggerRef}
         onClick={() => setIsOpenModal(true)}
         label="🚀 신청 폼 작성하기"
       />
@@ -23,6 +25,7 @@ const ModalFormPage = () => {
         <Modal
           onClose={() => setIsOpenModal(false)}
           title="신청 확인"
+          returnFocusRef={triggerRef}
           content={
             <div>
               <p>
