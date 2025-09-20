@@ -1,6 +1,7 @@
-import { useEffect, useId } from "react";
+import { useEffect, useRef, useId } from "react";
 import Button from "../Button/Button";
 import * as S from "./Modal.styled";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 interface ModalButton {
   label: string;
@@ -15,9 +16,13 @@ interface ModalProps {
 }
 
 const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const buttonId = useId();
   const titleId = `${buttonId}-title`;
   const contentId = `${buttonId}-desc`;
+
+  useFocusTrap(true, containerRef, titleRef);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -30,19 +35,22 @@ const Modal = ({ onClose, title, content, buttons = [] }: ModalProps) => {
   return (
     <S.Overlay onClick={onClose}>
       <S.Container
+        ref={containerRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={contentId}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id={titleId}>{title}</h2>
+        <h2 id={titleId} ref={titleRef} tabIndex={-1}>
+          {title}
+        </h2>
         <div id={contentId}>{content}</div>
 
         <div>
           {buttons.map((button) => (
             <Button
-              key={buttonId}
+              key={button.label}
               onClick={button.onClick}
               label={button.label}
             />
